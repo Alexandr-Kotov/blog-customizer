@@ -11,11 +11,13 @@ import {
 	fontSizeOptions,
 	OptionType,
 } from 'src/constants/articleProps';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
+import clsx from 'clsx';
 
 export const ArticleParamsForm = () => {
+	const [isOpen, setIsOpen] = useState(false);
 	const [font, setFont] = useState<OptionType>(fontFamilyOptions[0]);
 	const [size, setSize] = useState<OptionType>(fontSizeOptions[0]);
 	const [color, setColor] = useState<OptionType>(fontColors[0]);
@@ -23,11 +25,29 @@ export const ArticleParamsForm = () => {
 		backgroundColors[0]
 	);
 	const [width, setWidth] = useState<OptionType>(contentWidthArr[0]);
+	const sidebarRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				isOpen &&
+				sidebarRef.current &&
+				!sidebarRef.current.contains(event.target as Node)
+			) {
+				setIsOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, [isOpen]);
 
 	return (
 		<>
-			<ArrowButton isOpen={true} onClick={() => {}} />
-			<aside className={styles.container}>
+			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} />
+			<aside
+				className={clsx(styles.container, { [styles.container_open]: isOpen })}
+				ref={sidebarRef}>
 				<form className={styles.form}>
 					<h2 className={styles.title}>Задайте параметры</h2>
 					<Select
