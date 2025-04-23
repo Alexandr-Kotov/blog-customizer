@@ -70,9 +70,7 @@
 		"prepare": "husky install",
 		"commit": "npm run test && cz",
 		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build",
-		"predeploy": "npm run build",
-		"deploy": "gh-pages -d build -b review"
+		"build-storybook": "storybook build"
 	},
 	"eslintConfig": {
 		"extends": [
