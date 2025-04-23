@@ -1,6 +1,5 @@
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
-
 import styles from './ArticleParamsForm.module.scss';
 import { Select } from 'src/ui/select';
 import {
@@ -16,7 +15,17 @@ import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 import clsx from 'clsx';
 
-export const ArticleParamsForm = () => {
+type Props = {
+	onApply: (settings: {
+		font: OptionType;
+		size: OptionType;
+		color: OptionType;
+		backgroundColor: OptionType;
+		width: OptionType;
+	}) => void;
+};
+
+export const ArticleParamsForm = ({ onApply }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [font, setFont] = useState<OptionType>(fontFamilyOptions[0]);
 	const [size, setSize] = useState<OptionType>(fontSizeOptions[0]);
@@ -42,13 +51,32 @@ export const ArticleParamsForm = () => {
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, [isOpen]);
 
+	const handleApply = (e: React.FormEvent) => {
+		e.preventDefault();
+		onApply({
+			font,
+			size,
+			color,
+			backgroundColor,
+			width,
+		});
+	};
+
+	const handleReset = () => {
+		setFont(fontFamilyOptions[0]);
+		setSize(fontSizeOptions[0]);
+		setColor(fontColors[0]);
+		setBackgroundColor(backgroundColors[0]);
+		setWidth(contentWidthArr[0]);
+	};
+
 	return (
 		<>
 			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} />
 			<aside
 				className={clsx(styles.container, { [styles.container_open]: isOpen })}
 				ref={sidebarRef}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={handleApply}>
 					<h2 className={styles.title}>Задайте параметры</h2>
 					<Select
 						title='Шрифт'
@@ -83,7 +111,12 @@ export const ArticleParamsForm = () => {
 						onChange={setWidth}
 					/>
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' htmlType='reset' type='clear' />
+						<Button
+							title='Сбросить'
+							htmlType='reset'
+							type='clear'
+							onClick={handleReset}
+						/>
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
