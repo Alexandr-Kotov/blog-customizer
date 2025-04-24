@@ -26,7 +26,7 @@ type Props = {
 };
 
 export const ArticleParamsForm = ({ onApply }: Props) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [font, setFont] = useState<OptionType>(fontFamilyOptions[0]);
 	const [size, setSize] = useState<OptionType>(fontSizeOptions[0]);
 	const [color, setColor] = useState<OptionType>(fontColors[0]);
@@ -37,19 +37,20 @@ export const ArticleParamsForm = ({ onApply }: Props) => {
 	const sidebarRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
+		if (!isMenuOpen) return;
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
-				isOpen &&
+				isMenuOpen &&
 				sidebarRef.current &&
 				!sidebarRef.current.contains(event.target as Node)
 			) {
-				setIsOpen(false);
+				setIsMenuOpen(false);
 			}
 		};
 
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, [isOpen]);
+	}, [isMenuOpen]);
 
 	const handleApply = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -72,9 +73,14 @@ export const ArticleParamsForm = ({ onApply }: Props) => {
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} />
+			<ArrowButton
+				isOpen={isMenuOpen}
+				onClick={() => setIsMenuOpen((prev) => !prev)}
+			/>
 			<aside
-				className={clsx(styles.container, { [styles.container_open]: isOpen })}
+				className={clsx(styles.container, {
+					[styles.container_open]: isMenuOpen,
+				})}
 				ref={sidebarRef}>
 				<form className={styles.form} onSubmit={handleApply}>
 					<h2 className={styles.title}>Задайте параметры</h2>
