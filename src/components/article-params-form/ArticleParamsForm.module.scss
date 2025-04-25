@@ -3,7 +3,7 @@
 	left: 0;
 	width: 616px;
 	height: 100%;
-	overflow: scroll;
+	overflow: auto;
 	transform: translate(-616px);
 	transition: transform 0.5s ease;
 }
@@ -21,6 +21,7 @@
 	height: auto;
 	min-height: 100%;
 	padding: 50px 31px;
+	font-family: 'Open Sans', sans-serif;
 	background-color: #ffffff;
 	border-right: 1px solid #000000;
 }
@@ -29,4 +30,14 @@
 	display: flex;
 	justify-content: space-between;
 	margin-top: auto;
+}
+
+.title {
+	margin-bottom: 50px;
+	font-weight: 800;
+	font-size: 31px;
+	line-height: 1;
+	letter-spacing: 0%;
+	text-align: start;
+	text-transform: uppercase;
 }
